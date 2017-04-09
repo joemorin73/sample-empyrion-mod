@@ -248,6 +248,20 @@ namespace ENRC
 
         private void btnSentCommand_Click(object sender, RoutedEventArgs e)
         {
+            Send_Command_Text();
+        }
+
+        private void txtCommand_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            switch (e.Key) {
+                case System.Windows.Input.Key.Enter:
+                    Send_Command_Text();
+                        break;
+                }
+        }
+
+        private void Send_Command_Text()
+        {
             if (txtCommand.Text != "")
             {
                 Send_Command(txtCommand.Text);

@@ -56,7 +56,7 @@
         <Button Margin="2" Grid.Column="0" Grid.Row="6" x:Name="btnGetPlayerInfo" Click="btnGetPlayerInfo_Click" Content="Get Playerinfo"/>
         <Button Margin="2" Grid.Column="0" Grid.Row="7" x:Name="btnSentMessage" Click="btnSentMessage_Click" Content="Sent Message to all"/>
 
-        <TextBox Margin="2" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="7" x:Name="txtCommand"/>
+        <TextBox Margin="6" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="7" x:Name="txtCommand" KeyUp="txtCommand_KeyUp"/>
         <Button Margin="2" Grid.Column="9" Grid.Row="0" x:Name="btnSentCommand" Click="btnSentCommand_Click" Content="Sent command"/>
 
         <DataGrid Margin="2" Grid.Column="1" Grid.Row="1" Grid.RowSpan="4" Grid.ColumnSpan="1" AutoGenerateColumns="False" ItemsSource="{Binding onlinePlayfields}" IsReadOnly="True">
