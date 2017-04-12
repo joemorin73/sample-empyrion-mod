@@ -12,7 +12,10 @@ namespace ENRC
         #region  "Send Requests to Game"        
         private void SendRequest(Eleon.Modding.CmdId cmdID, Eleon.Modding.CmdId seqNr, object data)
         {
-            output(string.Format("SendRequest: Command {0} SeqNr: {1}", cmdID, seqNr));
+            if (mainWindowDataContext != null && mainWindowDataContext.EnableOutput_SendRequest)
+            { 
+                output(string.Format("SendRequest: Command {0} SeqNr: {1}", cmdID, seqNr), cmdID);
+            }
             client.Send(cmdID, (ushort)seqNr, data);
         }
 
@@ -174,11 +177,11 @@ namespace ENRC
                 if (System.Windows.Application.Current == null) { return; }
                 if (p.data == null)
                 {
-                    output(string.Format("Empty Package id rec: {0}", p.cmd));
+                    output(string.Format("Empty Package id rec: {0}", p.cmd), p.cmd);
                     return;
                 }
 
-                output(string.Format("Package id rec: {0}", p.cmd));
+                output(string.Format("Package id rec: {0}", p.cmd), p.cmd);
 
                 switch (p.cmd)
                 {
@@ -222,12 +225,12 @@ namespace ENRC
                                 for (int i = 0; i < playerIds.Count; i++)
                                 {
                                     System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => mainWindowDataContext.onlinePlayer.Add(playerIds[i])));
-                                    output(string.Format("{0} Player with id {1}", i + 1, playerIds[i]));
+                                    output(string.Format("{0} Player with id {1}", i + 1, playerIds[i]), p.cmd);
                                 }
                             }
                             else
                             {
-                                output("No players connected");
+                                output("No players connected", p.cmd);
                             }
                         }
                         break;
@@ -236,7 +239,7 @@ namespace ENRC
                         {
                             Eleon.Modding.PlayerInfo pInfo = (Eleon.Modding.PlayerInfo)p.data;
                             if (pInfo == null) { break; }
-                            output(string.Format("Player info (seqnr {0}): cid={1} eid={2} name={3} playfield={4} fac={5}", p.seqNr, pInfo.clientId, pInfo.entityId, pInfo.playerName, pInfo.playfield, pInfo.factionId));
+                            output(string.Format("Player info (seqnr {0}): cid={1} eid={2} name={3} playfield={4} fac={5}", p.seqNr, pInfo.clientId, pInfo.entityId, pInfo.playerName, pInfo.playfield, pInfo.factionId), p.cmd);
 
                             System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
                             {
@@ -252,21 +255,21 @@ namespace ENRC
                         {
                             Eleon.Modding.Inventory inv = (Eleon.Modding.Inventory)p.data;
                             if (inv == null) { break; }
-                            output(string.Format("Inventory received from player {0}", inv.playerId));
+                            output(string.Format("Inventory received from player {0}", inv.playerId), p.cmd);
                             if (inv.toolbelt != null)
                             {
-                                output("Toolbelt:");
+                                output("Toolbelt:", p.cmd);
                                 for (int i = 0; inv.toolbelt != null && i < inv.toolbelt.Length; i++)
                                 {
-                                    output("  " + inv.toolbelt[i].slotIdx + ". " + inv.toolbelt[i].id + " " + inv.toolbelt[i].count + " " + inv.toolbelt[i].ammo);
+                                    output("  " + inv.toolbelt[i].slotIdx + ". " + inv.toolbelt[i].id + " " + inv.toolbelt[i].count + " " + inv.toolbelt[i].ammo, p.cmd);
                                 }
                             }
                             if (inv.bag != null)
                             {
-                                output("Bag:");
+                                output("Bag:", p.cmd);
                                 for (int i = 0; inv.bag != null && i < inv.bag.Length; i++)
                                 {
-                                    output("  " + inv.bag[i].slotIdx + ". " + inv.bag[i].id + " " + inv.bag[i].count + " " + inv.bag[i].ammo);
+                                    output("  " + inv.bag[i].slotIdx + ". " + inv.bag[i].id + " " + inv.bag[i].count + " " + inv.bag[i].ammo, p.cmd);
                                 }
                             }
                         }
@@ -276,7 +279,7 @@ namespace ENRC
                         {
                             Eleon.Modding.IdPositionRotation idPos = (Eleon.Modding.IdPositionRotation)p.data;
                             if (idPos == null) { break; }
-                            output(string.Format("Player with id {0} position {1}, {2}, {3} rotation {4}, {5}, {6}", idPos.id, idPos.pos.x, idPos.pos.y, idPos.pos.z, idPos.rot.x, idPos.rot.y, idPos.rot.z));
+                            output(string.Format("Player with id {0} position {1}, {2}, {3} rotation {4}, {5}, {6}", idPos.id, idPos.pos.x, idPos.pos.y, idPos.pos.z, idPos.rot.x, idPos.rot.y, idPos.rot.z), p.cmd);
                         }
                         break;
 
@@ -284,13 +287,13 @@ namespace ENRC
                         {
                             Eleon.Modding.IdCredits idCredits = (Eleon.Modding.IdCredits)p.data;
                             if (idCredits == null) { break; }
-                            output(string.Format("Credits player with id {0}: {1}", idCredits.id, idCredits.credits));
+                            output(string.Format("Credits player with id {0}: {1}", idCredits.id, idCredits.credits), p.cmd);
                         }
                         break;
 
                     case Eleon.Modding.CmdId.Event_Ok:
                         {
-                            output(string.Format("Event Ok seqnr {0}", p.seqNr));
+                            output(string.Format("Event Ok seqnr {0}", p.seqNr), p.cmd);
                         }
                         break;
 
@@ -301,11 +304,11 @@ namespace ENRC
 
                             if (eInfo == null)
                             {
-                                output(string.Format("Event Error seqnr {0}: TMD: p.data of Event_Error was not set", p.seqNr));
+                                output(string.Format("Event Error seqnr {0}: TMD: p.data of Event_Error was not set", p.seqNr), p.cmd);
                             }
                             else
                             {
-                                output(string.Format("Event Error {0} seqnr {1}", eInfo.errorType, cmdId));
+                                output(string.Format("Event Error {0} seqnr {1}", eInfo.errorType, cmdId), p.cmd);
                             }
                         }
                         break;
@@ -368,7 +371,7 @@ namespace ENRC
                         {
                             Eleon.Modding.GlobalStructureList obj = (Eleon.Modding.GlobalStructureList)p.data;
                             if (obj == null || obj.globalStructures == null) { break; }
-                            output(string.Format("Global structures. Count: {0}", obj.globalStructures != null ? obj.globalStructures.Count : 0));
+                            output(string.Format("Global structures. Count: {0}", obj.globalStructures != null ? obj.globalStructures.Count : 0), p.cmd);
 
                             if (obj.globalStructures != null)
                             {
@@ -376,14 +379,14 @@ namespace ENRC
 
                                 foreach (KeyValuePair<string, List<Eleon.Modding.GlobalStructureInfo>> kvp in obj.globalStructures)
                                 {
-                                    output(string.Format("Playfield {0}", kvp.Key));
+                                    output(string.Format("Playfield {0}", kvp.Key), p.cmd);
 
                                     foreach (Eleon.Modding.GlobalStructureInfo g in kvp.Value)
                                     {
                                         StructureInfo stI = new StructureInfo();
                                         stI.FromStructureInfo(g, kvp.Key);
 
-                                        output(string.Format("  id={0} name={1} type={2} #blocks={3} #devices={4} playfield={5} pos={6}/{7}/{8}", g.id, g.name, g.type, g.cntBlocks, g.cntDevices, kvp.Key, g.pos.x, g.pos.y, g.pos.z));
+                                        output(string.Format("  id={0} name={1} type={2} #blocks={3} #devices={4} playfield={5} pos={6}/{7}/{8}", g.id, g.name, g.type, g.cntBlocks, g.cntDevices, kvp.Key, g.pos.x, g.pos.y, g.pos.z), p.cmd);
 
                                         System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => mainWindowDataContext.structures.Add(stI)));
                                     }
@@ -396,12 +399,12 @@ namespace ENRC
                         {
                             Eleon.Modding.PlayfieldList obj = (Eleon.Modding.PlayfieldList)p.data;
                             if (obj == null || obj.playfields == null) { break; }
-                            output(string.Format("Playfield list. Count: {0}", obj.playfields != null ? obj.playfields.Count : 0));
+                             output(string.Format("Playfield list. Count: {0}", obj.playfields != null ? obj.playfields.Count : 0), p.cmd);
                             System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => mainWindowDataContext.onlinePlayfields.Clear()));
                             foreach (string s in obj.playfields)
                             {
                                 System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => mainWindowDataContext.onlinePlayfields.Add(s)));
-                                output(string.Format("  {0}", s));
+                                output(string.Format("  {0}", s), p.cmd);
                             }
                         }
                         break;
@@ -434,7 +437,7 @@ namespace ENRC
                             Eleon.Modding.PString obj = (Eleon.Modding.PString)p.data;
                             if (obj == null) { break; }
 
-                            output(string.Format("Request_ConsoleCommand: {0}", obj.pstr));
+                            output(string.Format("Request_ConsoleCommand: {0}", obj.pstr), p.cmd);
                         }
                         break;
 
@@ -443,7 +446,7 @@ namespace ENRC
                             Eleon.Modding.ChatInfo obj = (Eleon.Modding.ChatInfo)p.data;
                             if (obj == null) { break; }
 
-                            output(string.Format("Chat: Player: {0}, Recepient: {1}, Recepient Faction: {2}, Message: '{3}'", obj.playerId, obj.recipientEntityId, obj.recipientFactionId, obj.msg));
+                            output(string.Format("Chat: Player: {0}, Recepient: {1}, Recepient Faction: {2}, Message: '{3}'", obj.playerId, obj.recipientEntityId, obj.recipientFactionId, obj.msg), p.cmd);
                         }
                         break;
 
@@ -457,23 +460,62 @@ namespace ENRC
                         break;
 
                     default:
-                        output(string.Format("(1) Unknown package cmd {0}", p.cmd));
+                        output(string.Format("(1) Unknown package cmd {0}", p.cmd), p.cmd);
                         break;
                 }
             }
             catch (Exception ex)
             {
-                output(string.Format("Error: {0}", ex.Message));
+                output(string.Format("Error: {0}", ex.Message), p.cmd);
             }
         }
         #endregion
 
         private void output(string s)
         {
+            output(s, Eleon.Modding.CmdId.Event_Ok);
+        }
+
+        private void output(string s, Eleon.Modding.CmdId cmdID)
+        {
             Console.WriteLine(s);
+            bool allowOutput = true;
             if (mainWindowDataContext != null && mainWindowDataContext.output != null && System.Windows.Application.Current != null)
             {
-                System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => mainWindowDataContext.output.Insert(0, s)));
+                switch(cmdID)
+                {
+                    case Eleon.Modding.CmdId.Event_Playfield_List:
+                        allowOutput = mainWindowDataContext.EnableOutput_Event_Playfield_List;
+                        break;
+
+                    case Eleon.Modding.CmdId.Event_GlobalStructure_List:
+                        allowOutput = mainWindowDataContext.EnableOutput_Event_GlobalStructure_List;
+                        break;
+
+                    case Eleon.Modding.CmdId.Event_Player_Credits:
+                        allowOutput = mainWindowDataContext.EnableOutput_Event_Player_Credits;
+                        break;
+
+                    case Eleon.Modding.CmdId.Event_Entity_PosAndRot:
+                        allowOutput = mainWindowDataContext.EnableOutput_Event_Entity_PosAndRot;
+                        break;
+
+                    case Eleon.Modding.CmdId.Event_Player_Inventory:
+                        allowOutput = mainWindowDataContext.EnableOutput_Event_Player_Inventory;
+                        break;
+
+                    case Eleon.Modding.CmdId.Event_Player_Info:
+                        allowOutput = mainWindowDataContext.EnableOutput_Event_Player_Info;
+                        break;
+
+                    case Eleon.Modding.CmdId.Event_Player_List:
+                        allowOutput = mainWindowDataContext.EnableOutput_Event_Player_List;
+                        break;
+                }
+                if (allowOutput)
+                {
+                    System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => mainWindowDataContext.output.Insert(0, s)));
+                }
             }
         }
 

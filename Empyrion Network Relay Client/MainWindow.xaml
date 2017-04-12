@@ -25,16 +25,16 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150"/>
@@ -55,6 +55,17 @@
         <Button Margin="2" Grid.Column="0" Grid.Row="5" x:Name="btnGetStructureUpdate" Click="btnGetStructureUpdate_Click" Content="Structureupdate"/>
         <Button Margin="2" Grid.Column="0" Grid.Row="6" x:Name="btnGetPlayerInfo" Click="btnGetPlayerInfo_Click" Content="Get Playerinfo"/>
         <Button Margin="2" Grid.Column="0" Grid.Row="7" x:Name="btnSentMessage" Click="btnSentMessage_Click" Content="Sent Message to all"/>
+
+
+        <Label Margin="2" Grid.Column="0" Grid.Row="13" Content="Enable Output of:" FontWeight="Bold"/>
+        <CheckBox Margin="2" Grid.Column="0" Grid.Row="14" Content="SendRequest" IsChecked="{Binding EnableOutput_SendRequest}"/>
+        <CheckBox Margin="2" Grid.Column="0" Grid.Row="15" Content="Player List" IsChecked="{Binding EnableOutput_Event_Player_List}"/>
+        <CheckBox Margin="2" Grid.Column="0" Grid.Row="16" Content="Player Info" IsChecked="{Binding EnableOutput_Event_Player_Info}"/>
+        <CheckBox Margin="2" Grid.Column="0" Grid.Row="17" Content="Player Inventory" IsChecked="{Binding EnableOutput_Event_Player_Inventory}"/>
+        <CheckBox Margin="2" Grid.Column="0" Grid.Row="18" Content="Entity PosAndRot" IsChecked="{Binding EnableOutput_Event_Entity_PosAndRot}"/>
+        <CheckBox Margin="2" Grid.Column="0" Grid.Row="19" Content="Player Credits" IsChecked="{Binding EnableOutput_Event_Player_Credits}"/>
+        <CheckBox Margin="2" Grid.Column="0" Grid.Row="20" Content="GlobalStructure List" IsChecked="{Binding EnableOutput_Event_GlobalStructure_List}"/>
+        <CheckBox Margin="2" Grid.Column="0" Grid.Row="21" Content="Playfield List" IsChecked="{Binding EnableOutput_Event_Playfield_List}"/>
 
         <TextBox Margin="6" Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="7" x:Name="txtCommand" KeyUp="txtCommand_KeyUp"/>
         <Button Margin="2" Grid.Column="9" Grid.Row="0" x:Name="btnSentCommand" Click="btnSentCommand_Click" Content="Sent command"/>

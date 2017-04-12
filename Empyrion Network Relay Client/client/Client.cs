@@ -71,7 +71,7 @@ namespace ENRC.client
 
         public void Send(CmdId cmdId, ushort seqNr, object data)
         {
-            ClientMessages("Sending request event: c=" + cmdId + " sNr=" + seqNr + " d=" + data + " client="+client);
+            //ClientMessages("Sending request event: c=" + cmdId + " sNr=" + seqNr + " d=" + data + " client="+client);
             // Send events of the network
             ModProtocol c = client;
             if (c != null)
