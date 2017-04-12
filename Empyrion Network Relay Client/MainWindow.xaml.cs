@@ -268,5 +268,31 @@ namespace ENRC
                 txtCommand.Text = "";
             }
         }
+
+        private void btnGetAlliances_Click(object sender, RoutedEventArgs e)
+        {
+            Get_Alliances();
+        }
+
+        private void btnGetFactions_Click(object sender, RoutedEventArgs e)
+        {
+            Get_Factions();
+        }
+
+        private void mnuGet_Structure_BlockStatistics_Click(object sender, RoutedEventArgs e)
+        {
+            if (dgStructures.SelectedItem != null)
+            {
+                Get_Structure_BlockStatistics(((data.StructureInfo)dgStructures.SelectedItem).id);
+            }            
+        }
+
+        private void mnuTouch_Click(object sender, RoutedEventArgs e)
+        {
+            if (dgStructures.SelectedItem != null)
+            {
+                Touch_Structure(((data.StructureInfo)dgStructures.SelectedItem).id);
+            }
+        }
     }
 }

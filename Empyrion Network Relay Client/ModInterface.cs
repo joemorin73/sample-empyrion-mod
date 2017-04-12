@@ -13,7 +13,7 @@ namespace ENRC
         private void SendRequest(Eleon.Modding.CmdId cmdID, Eleon.Modding.CmdId seqNr, object data)
         {
             if (mainWindowDataContext != null && mainWindowDataContext.EnableOutput_SendRequest)
-            { 
+            {
                 output(string.Format("SendRequest: Command {0} SeqNr: {1}", cmdID, seqNr), cmdID);
             }
             client.Send(cmdID, (ushort)seqNr, data);
@@ -95,6 +95,26 @@ namespace ENRC
         private void GetStructureUpdate(string Playfield)
         {
             SendRequest(Eleon.Modding.CmdId.Request_GlobalStructure_Update, Eleon.Modding.CmdId.Request_GlobalStructure_Update, new Eleon.Modding.PString(Playfield));
+        }
+
+        private void Get_Factions(int fromId = 0)
+        {
+            SendRequest(Eleon.Modding.CmdId.Request_Get_Factions, Eleon.Modding.CmdId.Request_Get_Factions, new Eleon.Modding.Id(fromId));
+        }
+
+        private void Get_Structure_BlockStatistics(int entityId)
+        {
+            SendRequest(Eleon.Modding.CmdId.Request_Structure_BlockStatistics, Eleon.Modding.CmdId.Request_Structure_BlockStatistics, new Eleon.Modding.Id(entityId));
+        }
+
+        private void Touch_Structure(int entityId)
+        {
+            SendRequest(Eleon.Modding.CmdId.Request_Structure_Touch, Eleon.Modding.CmdId.Request_Structure_Touch, new Eleon.Modding.Id(entityId));
+        }
+
+        private void Get_Alliances()
+        {
+            SendRequest(Eleon.Modding.CmdId.Request_AlliancesAll, Eleon.Modding.CmdId.Request_AlliancesAll, null);
         }
 
         private void Entity_SetPosition(int entity_Id, Eleon.Modding.PVector3 co, Eleon.Modding.PVector3 rot)
@@ -399,7 +419,7 @@ namespace ENRC
                         {
                             Eleon.Modding.PlayfieldList obj = (Eleon.Modding.PlayfieldList)p.data;
                             if (obj == null || obj.playfields == null) { break; }
-                             output(string.Format("Playfield list. Count: {0}", obj.playfields != null ? obj.playfields.Count : 0), p.cmd);
+                            output(string.Format("Playfield list. Count: {0}", obj.playfields != null ? obj.playfields.Count : 0), p.cmd);
                             System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => mainWindowDataContext.onlinePlayfields.Clear()));
                             foreach (string s in obj.playfields)
                             {
@@ -446,7 +466,24 @@ namespace ENRC
                             Eleon.Modding.ChatInfo obj = (Eleon.Modding.ChatInfo)p.data;
                             if (obj == null) { break; }
 
-                            output(string.Format("Chat: Player: {0}, Recepient: {1}, Recepient Faction: {2}, Message: '{3}'", obj.playerId, obj.recipientEntityId, obj.recipientFactionId, obj.msg), p.cmd);
+                            string typeName;
+                            switch (obj.type)
+                            {
+                                case 7:
+                                    typeName = "to faction";
+                                    break;
+                                case 8:
+                                    typeName = "to player";
+                                    break;
+                                case 9:
+                                    typeName = "to server";
+                                    break;
+                                default:
+                                    typeName = "";
+                                    break;
+                            }
+
+                            output(string.Format("Chat: Player: {0}, Recepient: {1}, Recepient Faction: {2}, {3}, Message: '{4}'", obj.playerId, obj.recipientEntityId, obj.recipientFactionId, typeName, obj.msg), p.cmd);
                         }
                         break;
 
@@ -456,6 +493,38 @@ namespace ENRC
                             if (obj == null) { break; }
 
                             addEvent(string.Format("Event_Player_DisconnectedWaiting: Player: {0}", obj.id));
+                        }
+                        break;
+
+                    case Eleon.Modding.CmdId.Event_AlliancesAll:
+                        {
+                            Eleon.Modding.AlliancesTable obj = (Eleon.Modding.AlliancesTable)p.data;
+                            if (obj == null) { break; }
+
+                            int facId1;
+                            int facId2;
+
+                            //Only differences to default alliances are listed (everyone in same Origin is by default allied)
+                            foreach (int factionHash in obj.alliances)
+                            {
+                                facId1 = (factionHash >> 16) & 0xffff;
+                                facId2 = factionHash & 0xffff;
+
+                                output(string.Format("Alliance difference between faction {0} and faction {1}", facId1, facId2), p.cmd);
+                            }
+                        }
+                        break;
+
+                    case Eleon.Modding.CmdId.Event_Structure_BlockStatistics:
+                        {
+                            Eleon.Modding.IdStructureBlockInfo obj = (Eleon.Modding.IdStructureBlockInfo)p.data;
+                            if (obj == null) { break; }
+
+                            foreach (KeyValuePair<int, int> blockstat in obj.blockStatistics)
+                            {
+                                output(string.Format("{0}: {1}", blockstat.Key, blockstat.Value), p.cmd);
+                            }
+                            output(string.Format("Block statistic for {0}", obj.id), p.cmd);
                         }
                         break;
 
@@ -482,7 +551,7 @@ namespace ENRC
             bool allowOutput = true;
             if (mainWindowDataContext != null && mainWindowDataContext.output != null && System.Windows.Application.Current != null)
             {
-                switch(cmdID)
+                switch (cmdID)
                 {
                     case Eleon.Modding.CmdId.Event_Playfield_List:
                         allowOutput = mainWindowDataContext.EnableOutput_Event_Playfield_List;

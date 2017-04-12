@@ -267,6 +267,26 @@ public class ModProtocol {
                         case CmdId.Request_ConsoleCommand:
                             obj = Serializer.Deserialize<PString>(ms);
                             break;
+
+                        case CmdId.Request_Structure_BlockStatistics:
+                            obj = Serializer.Deserialize<Id>(ms);
+                            break;
+
+                        case CmdId.Event_Structure_BlockStatistics:
+                            obj = Serializer.Deserialize<IdStructureBlockInfo>(ms);
+                            break;
+
+                        case CmdId.Event_AlliancesAll:
+                            obj = Serializer.Deserialize<AlliancesTable>(ms);
+                            break;
+
+                        case CmdId.Request_AlliancesFaction:
+                            obj = Serializer.Deserialize<AlliancesFaction>(ms);
+                            break;
+
+                        case CmdId.Event_AlliancesFaction:
+                            obj = Serializer.Deserialize<AlliancesFaction>(ms);
+                            break;
                     }
                 }
 
@@ -499,6 +519,26 @@ public class ModProtocol {
 
                         case CmdId.Request_ConsoleCommand:
                             ProtoBuf.Serializer.Serialize<Eleon.Modding.PString>(ms, (Eleon.Modding.PString)p.data);
+                            break;
+
+                        case CmdId.Request_Structure_BlockStatistics:
+                            ProtoBuf.Serializer.Serialize<Eleon.Modding.Id>(ms, (Eleon.Modding.Id)p.data);
+                            break;
+
+                        case CmdId.Event_Structure_BlockStatistics:
+                            ProtoBuf.Serializer.Serialize<Eleon.Modding.IdStructureBlockInfo>(ms, (Eleon.Modding.IdStructureBlockInfo)p.data);
+                            break;
+
+                        case CmdId.Event_AlliancesAll:
+                            ProtoBuf.Serializer.Serialize<Eleon.Modding.AlliancesTable>(ms, (Eleon.Modding.AlliancesTable)p.data);
+                            break;
+
+                        case CmdId.Request_AlliancesFaction:
+                            ProtoBuf.Serializer.Serialize<Eleon.Modding.AlliancesFaction>(ms, (Eleon.Modding.AlliancesFaction)p.data);
+                            break;
+
+                        case CmdId.Event_AlliancesFaction:
+                            ProtoBuf.Serializer.Serialize<Eleon.Modding.AlliancesFaction>(ms, (Eleon.Modding.AlliancesFaction)p.data);
                             break;
 
                         default:

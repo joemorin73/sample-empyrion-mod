@@ -55,6 +55,8 @@
         <Button Margin="2" Grid.Column="0" Grid.Row="5" x:Name="btnGetStructureUpdate" Click="btnGetStructureUpdate_Click" Content="Structureupdate"/>
         <Button Margin="2" Grid.Column="0" Grid.Row="6" x:Name="btnGetPlayerInfo" Click="btnGetPlayerInfo_Click" Content="Get Playerinfo"/>
         <Button Margin="2" Grid.Column="0" Grid.Row="7" x:Name="btnSentMessage" Click="btnSentMessage_Click" Content="Sent Message to all"/>
+        <Button Margin="2" Grid.Column="0" Grid.Row="8" x:Name="btnGetFactions" Click="btnGetFactions_Click" Content="Get Factions"/>
+        <Button Margin="2" Grid.Column="0" Grid.Row="9" x:Name="btnGetAlliances" Click="btnGetAlliances_Click" Content="Get Alliances"/>
 
 
         <Label Margin="2" Grid.Column="0" Grid.Row="13" Content="Enable Output of:" FontWeight="Bold"/>
@@ -109,6 +111,8 @@
                 <ContextMenu>
                     <MenuItem Header="Change location" x:Name="mnuChangeLocationStructure" Click="mnuChangeLocationStructure_Click"/>
                     <MenuItem Header="Destroy" x:Name="mnuDestroyStructure" Click="mnuDestroyStructure_Click"/>
+                    <MenuItem Header="Get BlockStatistics" x:Name="mnuGet_Structure_BlockStatistics" Click="mnuGet_Structure_BlockStatistics_Click"/>
+                    <MenuItem Header="Touch" x:Name="mnuTouch" Click="mnuTouch_Click"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
