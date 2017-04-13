@@ -294,5 +294,12 @@ namespace ENRC
                 Touch_Structure(((data.StructureInfo)dgStructures.SelectedItem).id);
             }
         }
+
+        private void btnClearOutput_Click(object sender, RoutedEventArgs e)
+        {
+            mainWindowDataContext.output.Clear();
+            mainWindowDataContext.events.Clear();
+            mainWindowDataContext.stats.Clear();
+        }
     }
 }

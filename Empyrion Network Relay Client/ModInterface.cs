@@ -6,6 +6,8 @@ namespace ENRC
 {
     public partial class MainWindow
     {
+        Type cmdType = typeof(Eleon.Modding.CmdId);
+
         static List<int> playerIds = new List<int>();
         static List<string> playfields = new List<string>();
 
@@ -97,7 +99,7 @@ namespace ENRC
             SendRequest(Eleon.Modding.CmdId.Request_GlobalStructure_Update, Eleon.Modding.CmdId.Request_GlobalStructure_Update, new Eleon.Modding.PString(Playfield));
         }
 
-        private void Get_Factions(int fromId = 0)
+        private void Get_Factions(int fromId = 1)
         {
             SendRequest(Eleon.Modding.CmdId.Request_Get_Factions, Eleon.Modding.CmdId.Request_Get_Factions, new Eleon.Modding.Id(fromId));
         }
@@ -201,7 +203,11 @@ namespace ENRC
                     return;
                 }
 
-                output(string.Format("Package id rec: {0}", p.cmd), p.cmd);
+                if (mainWindowDataContext != null && mainWindowDataContext.EnableOutput_DataRecieved)
+                {
+                    output(string.Format("Package received, id: {0}, type: {1}", p.cmd, Enum.GetName(cmdType, p.cmd)));
+                    output("received  event: c=" + p.cmd + " sNr=" + p.seqNr + " d=" + p.data + " client=" + client);
+                }
 
                 switch (p.cmd)
                 {
@@ -515,14 +521,26 @@ namespace ENRC
                         }
                         break;
 
+                    case Eleon.Modding.CmdId.Event_Get_Factions:
+                        {
+                            Eleon.Modding.FactionInfoList obj = (Eleon.Modding.FactionInfoList)p.data;
+                            if (obj == null || obj.factions == null) { break; }
+                            output(string.Format("Faction list. Count: {0}", obj.factions != null ? obj.factions.Count : 0), p.cmd);
+                            foreach (Eleon.Modding.FactionInfo fI in obj.factions)
+                            {
+                                output(string.Format("Id: {0}, Abrev: {1}, Name: {2}, Origin: {3}", fI.factionId, fI.abbrev, fI.name, fI.origin), p.cmd);
+                            }
+                        }
+                        break;
+
                     case Eleon.Modding.CmdId.Event_Structure_BlockStatistics:
                         {
                             Eleon.Modding.IdStructureBlockInfo obj = (Eleon.Modding.IdStructureBlockInfo)p.data;
-                            if (obj == null) { break; }
+                            if (obj == null || obj.blockStatistics == null) { break; }
 
                             foreach (KeyValuePair<int, int> blockstat in obj.blockStatistics)
                             {
-                                output(string.Format("{0}: {1}", blockstat.Key, blockstat.Value), p.cmd);
+                                output(string.Format("Item {0}: Amount: {1}", blockstat.Key, blockstat.Value), p.cmd);
                             }
                             output(string.Format("Block statistic for {0}", obj.id), p.cmd);
                         }

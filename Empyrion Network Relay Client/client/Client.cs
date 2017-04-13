@@ -52,13 +52,10 @@ namespace ENRC.client
                 Thread.Sleep(1000);
             }
         }
-        Type cmdType = typeof(Eleon.Modding.CmdId);
+        
         // Called in a thread!
         private void PackageReceivedDelegate(ModProtocol con, ModProtocol.Package p)
-        {
-            ClientMessages(string.Format("Package received, id: {0}, type: {1}", p.cmd, Enum.GetName(cmdType, p.cmd)));
-            ClientMessages("received  event: c=" + p.cmd + " sNr=" + p.seqNr + " d=" + p.data + " client=" + client);
-
+        {         
             GameEventReceived(p);
         }
 

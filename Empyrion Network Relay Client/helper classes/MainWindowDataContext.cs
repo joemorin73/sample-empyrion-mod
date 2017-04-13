@@ -21,6 +21,7 @@ namespace ENRC
         public bool EnableOutput_Event_Player_Credits { get; set; } = true;
         public bool EnableOutput_Event_GlobalStructure_List { get; set; } = true;
         public bool EnableOutput_Event_Playfield_List { get; set; } = true;
+        public bool EnableOutput_DataRecieved { get; set; } = true;
 
         public MainWindowDataContext()
         {
