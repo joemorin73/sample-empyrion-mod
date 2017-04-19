@@ -1,8 +1,11 @@
 ﻿using Eleon.Modding;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace DeathMessagesModule
 {
@@ -21,24 +24,36 @@ namespace DeathMessagesModule
             GameAPI.Console_Write("Death Messages by joemorin73.");
             GameAPI.Console_Write("Part of the Empyrion Mod Sample collection.");
 
-            var filePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "Messages.txt";
+            //var filePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "Messages.txt";
+            var filePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "Messages.yaml";
 
-            messages = new Config.MessageCollection(filePath);
+            //messages = new Config.MessageCollection(filePath);
+
+            var input = File.OpenRead(filePath);
+
+            var deserializer = new Deserializer(namingConvention: new CamelCaseNamingConvention());
+
         }
 
         private void NormalMessage(String msg)
         {
             GameAPI.Game_Request(CmdId.Request_InGameMessage_AllPlayers, (ushort)CmdId.Request_InGameMessage_AllPlayers, new IdMsgPrio(0, msg, 2, 10));
+            String command = "SAY '" + msg + "'";
+            GameAPI.Game_Request(CmdId.Request_ConsoleCommand, (ushort)CmdId.Request_InGameMessage_AllPlayers, , new Eleon.Modding.PString(command));
         }
 
         private void AlertMessage(String msg)
         {
             GameAPI.Game_Request(CmdId.Request_InGameMessage_AllPlayers, (ushort)CmdId.Request_InGameMessage_AllPlayers, new IdMsgPrio(0, msg, 1, 10));
+            String command = "SAY '" + msg + "'";
+            GameAPI.Game_Request(CmdId.Request_ConsoleCommand, (ushort)CmdId.Request_InGameMessage_AllPlayers, , new Eleon.Modding.PString(command));
         }
 
         private void AttentionMessage(String msg)
         {
             GameAPI.Game_Request(CmdId.Request_InGameMessage_AllPlayers, (ushort)CmdId.Request_InGameMessage_AllPlayers, new IdMsgPrio(0, msg, 0, 10));
+            String command = "SAY '" + msg + "'";
+            GameAPI.Game_Request(CmdId.Request_ConsoleCommand, (ushort)CmdId.Request_InGameMessage_AllPlayers, , new Eleon.Modding.PString(command));
         }
 
         public void Game_Event(CmdId eventId, ushort seqNr, object data)
