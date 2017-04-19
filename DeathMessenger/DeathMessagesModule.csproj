@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\Configuration.cs" />
     <Compile Include="Config\Message.cs" />
     <Compile Include="Config\MessageCollection.cs" />
     <Compile Include="DeathMessages.cs" />
@@ -59,6 +60,11 @@
   <ItemGroup>
     <Content Include="Messages.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Messages.yaml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
