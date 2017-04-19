@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>dependencies\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Mif, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -56,11 +57,6 @@
     <Compile Include="Config\MessageCollection.cs" />
     <Compile Include="DeathMessages.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Messages.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Messages.yaml">

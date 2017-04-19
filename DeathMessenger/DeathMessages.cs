@@ -1,11 +1,8 @@
 ﻿using Eleon.Modding;
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
+
 
 namespace DeathMessagesModule
 {
