@@ -26,6 +26,12 @@ namespace DeathMessagesModule
             config = Config.Configuration.GetConfiguration(filePath);
         }
 
+        private void ChatMessage(String msg)
+        {
+            String command = "SAY '" + msg + "'";
+            GameAPI.Game_Request(CmdId.Request_ConsoleCommand, (ushort)CmdId.Request_InGameMessage_AllPlayers, new Eleon.Modding.PString(command));
+        }
+
         private void NormalMessage(String msg)
         {
             GameAPI.Game_Request(CmdId.Request_InGameMessage_AllPlayers, (ushort)CmdId.Request_InGameMessage_AllPlayers, new IdMsgPrio(0, msg, 2, 10));
@@ -91,6 +97,13 @@ namespace DeathMessagesModule
 
                             AlertMessage(msg);
                         }
+                        break;
+                    case CmdId.Event_ChatMessage:
+                        ChatInfo ci = (ChatInfo)data;
+                        if (ci == null) { break; }
+
+                        if (ci.type != 8 && ci.type != 7 && ci.msg == "!MODS")
+                            ChatMessage("Death Messages by joemorin73.");
                         break;
                     default:
                         break;
