@@ -6,6 +6,7 @@ namespace DeathMessagesModule.Config
 {
     public class Configuration
     {
+        public Boolean MessageInChat { get; set; }
         public MessageCollection Messages { get; set; }
 
         public Configuration()

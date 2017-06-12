@@ -1,4 +1,5 @@
-﻿Messages:
+﻿MessageInChat: False
+Messages:
 - DeathType: -1
   Message: "Courtesy of {0}."
 - DeathType: -1
