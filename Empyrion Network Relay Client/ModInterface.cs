@@ -188,6 +188,22 @@ namespace ENRC
         {
             SendRequest(Eleon.Modding.CmdId.Request_Entity_Destroy, Eleon.Modding.CmdId.Request_Entity_Destroy, new Eleon.Modding.Id(entity_Id));
         }
+
+        private void GetBannedPlayers()
+        {
+            SendRequest(Eleon.Modding.CmdId.Request_GetBannedPlayers, Eleon.Modding.CmdId.Request_GetBannedPlayers, null);
+        }
+
+        private void GetAndRemoveInventory(int entity_Id)
+        {
+            SendRequest(Eleon.Modding.CmdId.Request_Player_GetAndRemoveInventory, Eleon.Modding.CmdId.Request_Player_GetAndRemoveInventory, new Eleon.Modding.Id(entity_Id));
+        }
+
+        private void ItemExchange(int entity_Id)
+        {
+            Eleon.Modding.ItemStack[] itStack = new Eleon.Modding.ItemStack[] { new Eleon.Modding.ItemStack(2053, 1) };
+            SendRequest(Eleon.Modding.CmdId.Request_Player_ItemExchange, Eleon.Modding.CmdId.Request_Player_ItemExchange, new Eleon.Modding.ItemExchangeInfo(entity_Id,"Player Item Exchange Title", "Put your description here", "Your button text here", itStack));
+        }
         #endregion
 
         #region  "Recieve Data from Game"        
@@ -449,11 +465,11 @@ namespace ENRC
                             Eleon.Modding.StatisticsParam obj = (Eleon.Modding.StatisticsParam)p.data;
                             if (obj == null) { break; }
 
-                            addEvent(string.Format("Event_Statistics: {0} {1} {2} {3}", obj.type, obj.int1, obj.int2, obj.int3));
+                            addEvent(string.Format("Event_Statistics: {0} {1} {2} {3} {4}", obj.type, obj.int1, obj.int2, obj.int3, obj.int4));
 
                             //CoreRemoved,    int1: Structure id, int2: destryoing entity id, int3: (optional) controlling entity id
                             //CoreAdded,      int1: Structure id, int2: destryoing entity id, int3: (optional) controlling entity id
-                            //PlayerDied,     int1: player entity id, int2: death type(Unknown = 0, Projectile = 1, Explosion = 2, Food = 3, Oxygen = 4, Disease = 5, Drowning = 6, Fall = 7, Suicide = 8), int3 :  (optional) other entity involved
+                            //PlayerDied,     // int1: player entity id, int2: death type (Unknown = 0,Projectile = 1,Explosion = 2,Food = 3,Oxygen = 4,Disease = 5,Drowning = 6,Fall = 7,Suicide = 8), int3: (optional) other entity involved, int4: (optional) other entity CV/SV/HV id
                             //StructOnOff,    int1: structure id, int2: changing entity id, int3: 0 = off, 1 = on
                         }
                         break;
@@ -546,6 +562,53 @@ namespace ENRC
                         }
                         break;
 
+<<<<<<< HEAD
+=======
+                    case Eleon.Modding.CmdId.Event_BannedPlayers:
+                        {
+                            Eleon.Modding.BannedPlayerData obj = (Eleon.Modding.BannedPlayerData)p.data;
+                            if (obj == null || obj.BannedPlayers == null) { break; }
+                            output(string.Format("Banned list. Count: {0}", obj.BannedPlayers != null ? obj.BannedPlayers.Count : 0), p.cmd);
+                            foreach (Eleon.Modding.BannedPlayerData.BanEntry ba in obj.BannedPlayers)
+                            {
+                                output(string.Format("Id: {0}, Date: {1}", ba.steam64Id, DateTime.FromBinary(ba.dateTime)), p.cmd);
+                            }
+                        }
+                        break;
+
+                    case Eleon.Modding.CmdId.Event_TraderNPCItemSold:
+                        {
+                            Eleon.Modding.TraderNPCItemSoldInfo obj = (Eleon.Modding.TraderNPCItemSoldInfo)p.data;
+                            if (obj == null) { break; }
+                            output(string.Format("Trader NPC item sold info: TraderType: {0}, TraderId: {1}, PlayerId: {2}, StructureId: {3}, Item: {4}, Amount: {5}, Price: {6}", obj.traderType, obj.traderEntityId, obj.playerEntityId, obj.structEntityId, obj.boughtItemId, obj.boughtItemCount, obj.boughtItemPrice), p.cmd);                            
+                        }
+                        break;
+
+                    case Eleon.Modding.CmdId.Event_Player_GetAndRemoveInventory:
+                        {
+                            Eleon.Modding.Inventory inv = (Eleon.Modding.Inventory)p.data;
+                            if (inv == null) { break; }
+                            output(string.Format("Got and removed Inventory from player {0}", inv.playerId), p.cmd);
+                            if (inv.toolbelt != null)
+                            {
+                                output("Toolbelt:", p.cmd);
+                                for (int i = 0; inv.toolbelt != null && i < inv.toolbelt.Length; i++)
+                                {
+                                    output("  " + inv.toolbelt[i].slotIdx + ". " + inv.toolbelt[i].id + " " + inv.toolbelt[i].count + " " + inv.toolbelt[i].ammo, p.cmd);
+                                }
+                            }
+                            if (inv.bag != null)
+                            {
+                                output("Bag:", p.cmd);
+                                for (int i = 0; inv.bag != null && i < inv.bag.Length; i++)
+                                {
+                                    output("  " + inv.bag[i].slotIdx + ". " + inv.bag[i].id + " " + inv.bag[i].count + " " + inv.bag[i].ammo, p.cmd);
+                                }
+                            }
+                        }
+                        break;
+
+>>>>>>> refs/remotes/lostinplace/master
                     default:
                         output(string.Format("(1) Unknown package cmd {0}", p.cmd), p.cmd);
                         break;

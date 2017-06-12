@@ -287,6 +287,29 @@ public class ModProtocol {
                         case CmdId.Event_AlliancesFaction:
                             obj = Serializer.Deserialize<AlliancesFaction>(ms);
                             break;
+<<<<<<< HEAD
+=======
+
+                        case CmdId.Event_BannedPlayers:
+                            obj = Serializer.Deserialize<BannedPlayerData>(ms);
+                            break;
+
+                        case Eleon.Modding.CmdId.Request_InGameMessage_Faction:
+                            obj = ProtoBuf.Serializer.Deserialize<Eleon.Modding.IdMsgPrio>(ms);
+                            break;
+
+                        case Eleon.Modding.CmdId.Event_TraderNPCItemSold:
+                            obj = ProtoBuf.Serializer.Deserialize<Eleon.Modding.TraderNPCItemSoldInfo>(ms);
+                            break;
+
+                        case Eleon.Modding.CmdId.Request_Player_GetAndRemoveInventory:
+                            obj = ProtoBuf.Serializer.Deserialize<Eleon.Modding.Id>(ms);
+                            break;
+
+                        case Eleon.Modding.CmdId.Event_Player_GetAndRemoveInventory:
+                            obj = ProtoBuf.Serializer.Deserialize<Eleon.Modding.Inventory>(ms);
+                            break;
+>>>>>>> refs/remotes/lostinplace/master
                     }
                 }
 
@@ -541,6 +564,29 @@ public class ModProtocol {
                             ProtoBuf.Serializer.Serialize<Eleon.Modding.AlliancesFaction>(ms, (Eleon.Modding.AlliancesFaction)p.data);
                             break;
 
+<<<<<<< HEAD
+=======
+                        case CmdId.Event_BannedPlayers:
+                            ProtoBuf.Serializer.Serialize<Eleon.Modding.BannedPlayerData>(ms, (Eleon.Modding.BannedPlayerData)p.data);
+                            break;
+                            
+                        case CmdId.Request_InGameMessage_Faction:
+                            ProtoBuf.Serializer.Serialize<Eleon.Modding.IdMsgPrio>(ms, (Eleon.Modding.IdMsgPrio)p.data);
+                            break;
+
+                        case Eleon.Modding.CmdId.Event_TraderNPCItemSold:
+                            ProtoBuf.Serializer.Serialize<Eleon.Modding.TraderNPCItemSoldInfo>(ms, (Eleon.Modding.TraderNPCItemSoldInfo)p.data);
+                            break;
+
+                        case Eleon.Modding.CmdId.Request_Player_GetAndRemoveInventory:
+                            ProtoBuf.Serializer.Serialize<Eleon.Modding.Id>(ms, (Eleon.Modding.Id)p.data);
+                            break;
+
+                        case Eleon.Modding.CmdId.Event_Player_GetAndRemoveInventory:
+                            ProtoBuf.Serializer.Serialize<Eleon.Modding.Inventory>(ms, (Eleon.Modding.Inventory)p.data);
+                            break;
+
+>>>>>>> refs/remotes/lostinplace/master
                         default:
                             break;
                     }

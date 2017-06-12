@@ -301,5 +301,34 @@ namespace ENRC
             mainWindowDataContext.events.Clear();
             mainWindowDataContext.stats.Clear();
         }
+<<<<<<< HEAD
+=======
+
+        private void btnReloadPlayfield_Click(object sender, RoutedEventArgs e)
+        {
+            Send_Command("playfield");
+        }
+
+        private void btnGetBannedPlayers_Click(object sender, RoutedEventArgs e)
+        {
+            GetBannedPlayers();
+        }
+
+        private void mnuGetAndRemoveInventory_Click(object sender, RoutedEventArgs e)
+        {
+            if (dgPlayer.SelectedItem != null)
+            {
+                GetAndRemoveInventory(((data.PlayerInfo)dgPlayer.SelectedItem).entityId);
+            }            
+        }
+
+        private void mnuItemExchange_Click(object sender, RoutedEventArgs e)
+        {
+            if (dgPlayer.SelectedItem != null)
+            {
+                ItemExchange(((data.PlayerInfo)dgPlayer.SelectedItem).entityId);
+            }
+        }
+>>>>>>> refs/remotes/lostinplace/master
     }
 }
