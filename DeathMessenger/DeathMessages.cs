@@ -34,23 +34,17 @@ namespace DeathMessagesModule
 
         private void NormalMessage(String msg)
         {
-            GameAPI.Game_Request(CmdId.Request_InGameMessage_AllPlayers, (ushort)CmdId.Request_InGameMessage_AllPlayers, new IdMsgPrio(0, msg, 2, 10));
-            String command = "SAY '" + msg + "'";
-            GameAPI.Game_Request(CmdId.Request_ConsoleCommand, (ushort)CmdId.Request_InGameMessage_AllPlayers, new Eleon.Modding.PString(command));
+            GameAPI.Game_Request(CmdId.Request_InGameMessage_AllPlayers, (ushort)CmdId.Request_InGameMessage_AllPlayers, new IdMsgPrio(0, msg, 0, 100));
         }
 
         private void AlertMessage(String msg)
         {
-            GameAPI.Game_Request(CmdId.Request_InGameMessage_AllPlayers, (ushort)CmdId.Request_InGameMessage_AllPlayers, new IdMsgPrio(0, msg, 1, 10));
-            String command = "SAY '" + msg + "'";
-            GameAPI.Game_Request(CmdId.Request_ConsoleCommand, (ushort)CmdId.Request_InGameMessage_AllPlayers, new Eleon.Modding.PString(command));
+            GameAPI.Game_Request(CmdId.Request_InGameMessage_AllPlayers, (ushort)CmdId.Request_InGameMessage_AllPlayers, new IdMsgPrio(0, msg, 1, 100));
         }
 
         private void AttentionMessage(String msg)
         {
-            GameAPI.Game_Request(CmdId.Request_InGameMessage_AllPlayers, (ushort)CmdId.Request_InGameMessage_AllPlayers, new IdMsgPrio(0, msg, 0, 10));
-            String command = "SAY '" + msg + "'";
-            GameAPI.Game_Request(CmdId.Request_ConsoleCommand, (ushort)CmdId.Request_InGameMessage_AllPlayers, new Eleon.Modding.PString(command));
+            GameAPI.Game_Request(CmdId.Request_InGameMessage_AllPlayers, (ushort)CmdId.Request_InGameMessage_AllPlayers, new IdMsgPrio(0, msg, 2, 100));
         }
 
         public void Game_Event(CmdId eventId, ushort seqNr, object data)
@@ -96,6 +90,9 @@ namespace DeathMessagesModule
                                 msg += String.Format(config.Messages.GetNextMessage(-1), killer.playerName);
 
                             AlertMessage(msg);
+                            if (config.MessageInChat)
+                                ChatMessage(msg);
+
                         }
                         break;
                     case CmdId.Event_ChatMessage:
