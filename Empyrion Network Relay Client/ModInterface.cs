@@ -197,9 +197,16 @@ namespace ENRC
             SendRequest(Eleon.Modding.CmdId.Request_ConsoleCommand, Eleon.Modding.CmdId.Request_ConsoleCommand, new Eleon.Modding.PString(command));
         }
 
-        private void EntitySpawn()
+        private void EntitySpawn(int ID, string prefabName, string exportFile, string Playfield)
         {
-            //SendRequest(Eleon.Modding.CmdId.Request_Entity_Spawn, Eleon.Modding.CmdId.Request_Entity_Spawn, New Eleon.Modding.(...))
+            Eleon.Modding.EntitySpawnInfo spawnInfo;
+            spawnInfo = new Eleon.Modding.EntitySpawnInfo();
+            spawnInfo.forceEntityId = ID;
+            spawnInfo.exportedEntityDat = exportFile;
+            spawnInfo.prefabName = prefabName;
+            spawnInfo.playfield = Playfield;
+
+            SendRequest(Eleon.Modding.CmdId.Request_Entity_Spawn, Eleon.Modding.CmdId.Request_Entity_Spawn, spawnInfo);
         }
 
         private void Entity_Destroy(int entity_Id)
@@ -210,6 +217,11 @@ namespace ENRC
         private void Entity_Destroy2(int entity_Id, string playfield)
         {
             SendRequest(Eleon.Modding.CmdId.Request_Entity_Destroy2, Eleon.Modding.CmdId.Request_Entity_Destroy2, new Eleon.Modding.IdPlayfield(entity_Id,playfield));
+        }
+
+        private void Request_Entity_Export(int entity_Id)
+        {
+          SendRequest(Eleon.Modding.CmdId.Request_Entity_Export, Eleon.Modding.CmdId.Request_Entity_Export, new Eleon.Modding.EntityExportInfo(entity_Id, null, true));
         }
 
         private void GetBannedPlayers()
@@ -226,6 +238,11 @@ namespace ENRC
         {
             Eleon.Modding.ItemStack[] itStack = new Eleon.Modding.ItemStack[] { new Eleon.Modding.ItemStack(2053, 1) };
             SendRequest(Eleon.Modding.CmdId.Request_Player_ItemExchange, Eleon.Modding.CmdId.Request_Player_ItemExchange, new Eleon.Modding.ItemExchangeInfo(entity_Id, "Player Item Exchange Title", "Put your description here", "Your button text here", itStack));
+        }
+
+        private void Request_NewID()
+        {
+             SendRequest(Eleon.Modding.CmdId.Request_NewEntityId, Eleon.Modding.CmdId.Request_NewEntityId, null);
         }
         #endregion
 
@@ -500,6 +517,7 @@ namespace ENRC
                             //CoreAdded,      int1: Structure id, int2: destryoing entity id, int3: (optional) controlling entity id
                             //PlayerDied,     // int1: player entity id, int2: death type (Unknown = 0,Projectile = 1,Explosion = 2,Food = 3,Oxygen = 4,Disease = 5,Drowning = 6,Fall = 7,Suicide = 8), int3: (optional) other entity involved, int4: (optional) other entity CV/SV/HV id
                             //StructOnOff,    int1: structure id, int2: changing entity id, int3: 0 = off, 1 = on
+                            //StructDestroyed,// int1: structure id, int2: type (0=wipe, 1=decay)
                         }
                         break;
 
@@ -658,6 +676,20 @@ namespace ENRC
                             }
                         }
                         break;
+
+                    case Eleon.Modding.CmdId.Event_ConsoleCommand:
+                        {
+                            Eleon.Modding.ConsoleCommandInfo obj = (Eleon.Modding.ConsoleCommandInfo)p.data;
+                            if (obj == null) { break; }
+                            output(string.Format("Player {0}; Console command: {1} Allowed: {2}",obj.playerEntityId, obj.command, obj.allowed),p.cmd);
+                        }
+                        break;
+
+                    case Eleon.Modding.CmdId.Event_NewEntityId:
+                        {
+                            output(string.Format("New ID: {0}", ((Eleon.Modding.Id)p.data).id), p.cmd);
+                            break;
+                        }
 
                     default:
                         output(string.Format("(1) Unknown package cmd {0}", p.cmd), p.cmd);

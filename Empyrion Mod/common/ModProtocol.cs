@@ -319,6 +319,14 @@ public class ModProtocol {
                         case Eleon.Modding.CmdId.Request_Entity_Destroy2:
                             obj = ProtoBuf.Serializer.Deserialize<Eleon.Modding.IdPlayfield>(ms);
                             break;
+
+                        case Eleon.Modding.CmdId.Request_Entity_Export:
+                            obj = ProtoBuf.Serializer.Deserialize<Eleon.Modding.EntityExportInfo>(ms);
+                            break;
+
+                        case Eleon.Modding.CmdId.Event_ConsoleCommand:
+                            obj = ProtoBuf.Serializer.Deserialize<Eleon.Modding.ConsoleCommandInfo>(ms);
+                            break;
                     }
                 }
 
@@ -603,6 +611,14 @@ public class ModProtocol {
 
                         case Eleon.Modding.CmdId.Request_Entity_Destroy2:
                             ProtoBuf.Serializer.Serialize<Eleon.Modding.IdPlayfield>(ms, (Eleon.Modding.IdPlayfield)p.data);
+                            break;
+
+                        case Eleon.Modding.CmdId.Request_Entity_Export:
+                            ProtoBuf.Serializer.Serialize<Eleon.Modding.EntityExportInfo>(ms, (Eleon.Modding.EntityExportInfo)p.data);
+                            break;
+
+                        case Eleon.Modding.CmdId.Event_ConsoleCommand:
+                            ProtoBuf.Serializer.Serialize<Eleon.Modding.ConsoleCommandInfo>(ms, (Eleon.Modding.ConsoleCommandInfo)p.data);
                             break;
 
                         default:

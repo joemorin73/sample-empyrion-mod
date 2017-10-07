@@ -129,9 +129,12 @@ namespace Eleon.Modding
         Event_Player_GetAndRemoveInventory,  // Inventory
 
         Request_Playfield_Entity_List,      // PString (playfield)
-        Event_Playfield_Entity_List,        // PlayfieldEntityList
+        Event_Playfield_Entity_List,        // PlayfieldEntityList (will not include structs)
 
         Request_Entity_Destroy2,            // IdPlayfield (id of entity, playfield the entity is in)
+
+        Request_Entity_Export,              // EntityExportInfo
+        Event_ConsoleCommand,               // ConsoleCommandInfo
     }
 
     [Obfuscation]
@@ -158,6 +161,7 @@ namespace Eleon.Modding
         CoreAdded,      // int1: structure id, int2: destryoing entity id, int3: (optional) controlling entity id
         PlayerDied,     // int1: player entity id, int2: death type (Unknown = 0,Projectile = 1,Explosion = 2,Food = 3,Oxygen = 4,Disease = 5,Drowning = 6,Fall = 7,Suicide = 8), int3: (optional) other entity involved, int4: (optional) other entity CV/SV/HV id
         StructOnOff,    // int1: structure id, int2: changing entity id, int3: 0 = off, 1 = on
+        StructDestroyed,// int1: structure id, int2: type (0=wipe, 1=decay)
     }
 
     [Obfuscation]
@@ -182,7 +186,9 @@ namespace Eleon.Modding
         public byte factionGroup;
         [ProtoMember(9)]
         public int factionId;
-
+        [ProtoMember(10)]
+        public string exportedEntityDat;    // optional: file path of an exported entity dat file. 
+                                            // remark: the values above will override the imported data from the .dat file, but you can null/0 these to avoid this.
         public EntitySpawnInfo()
         {
         }
@@ -650,7 +656,8 @@ namespace Eleon.Modding
         NoIdlePlayfieldFound,
         PlayfieldCannotBeLoaded,
         PlayfieldAlreadyLoaded,
-        CommandNotImplemented
+        CommandNotImplemented,
+        IOError,
     }
 
     [Obfuscation]
@@ -1071,6 +1078,53 @@ namespace Eleon.Modding
         {
             playfield = nPlayield;
             entities = nEntities;
+        }
+    }
+
+    [Obfuscation]
+    [ProtoContract]
+    public class EntityExportInfo
+    {
+        [ProtoMember(1)]
+        public int id;              // id of entity to export
+        [ProtoMember(2)]
+        public string playfield;    // playfield entity is on (must be loaded, if null the system tries to determine playfield itself)
+        [ProtoMember(3)]
+        public string filePath;     // absolute filename and path to export the file to (if null use default: ./Shared/export_<id>.dat)
+        [ProtoMember(4)]
+        public bool isForceUnload;  // true will force the unload of the entity after exporting
+
+        public EntityExportInfo()
+        {
+        }
+
+        public EntityExportInfo(int nId, string nFilePath, bool nIsForceUnload)
+        {
+            id = nId;
+            filePath = nFilePath;
+            isForceUnload = nIsForceUnload;
+        }
+    }
+
+    [Obfuscation]
+    [ProtoContract]
+    public class ConsoleCommandInfo
+    {
+        [ProtoMember(1)]
+        public string command;
+        [ProtoMember(2)]
+        public bool allowed;    // set to true if the command was executed, false if it was denied
+        playerEntityId
+
+
+        public ConsoleCommandInfo()
+        {
+        }
+
+        public ConsoleCommandInfo(string nCommand, bool nAllowed)
+        {
+            command = nCommand;
+            allowed = nAllowed;
         }
     }
 }
